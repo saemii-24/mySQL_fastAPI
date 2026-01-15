@@ -1,2 +1,85 @@
-env
+# ======================
+# Python
+# ======================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ======================
+# Virtual Environments
+# ======================
+.venv/
+venv/
+env/
+ENV/
+
+# ======================
+# Environment variables
+# ======================
 .env
+.env.*
+!.env.example
+
+# ======================
+# FastAPI / Uvicorn
+# ======================
+*.log
+uvicorn.log
+
+# ======================
+# Pytest / Coverage
+# ======================
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# ======================
+# MyPy / Type checking
+# ======================
+.mypy_cache/
+.dmypy.json
+
+# ======================
+# IDE / Editor
+# ======================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ======================
+# OS
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# Build / Distribution
+# ======================
+build/
+dist/
+*.egg-info/
+
+# ======================
+# SQLite / DB
+# ======================
+*.db
+*.sqlite3
+
+# ======================
+# Jupyter
+# ======================
+.ipynb_checkpoints/
+
+# ======================
+# Logs
+# ======================
+logs/
+*.log
+
+# ======================
+# uv (if using)
+# ======================
+.uv/
