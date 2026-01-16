@@ -1,6 +1,8 @@
-def main():
-    print("Hello from mysql-fastapi!")
-
+import uvicorn
 
 if __name__ == "__main__":
-    main()
+    uvicorn.run(
+        "app.app:app",
+        host="0.0.0.0",
+        port=8000,
+    )
