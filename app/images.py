@@ -1,13 +1,10 @@
+# app/images.py
+import os
 from dotenv import load_dotenv
 from imagekitio import ImageKit
-import os
 
 load_dotenv()
 
-imagekit = ImageKit(
-    authentication_parameters={
-        "publicKey": os.getenv("IMAGEKIT_PUBLIC_KEY"),
-        "privateKey": os.getenv("IMAGEKIT_PRIVATE_KEY"),
-        "urlEndpoint": os.getenv("IMAGEKIT_URL"),
-    }
-)
+imagekit = ImageKit(private_key=os.getenv("IMAGEKIT_PRIVATE_KEY"))
+
+URL_ENDPOINT = os.getenv("IMAGEKIT_URL_ENDPOINT")

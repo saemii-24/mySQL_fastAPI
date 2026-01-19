@@ -9,7 +9,6 @@ import shutil
 import os
 import uuid
 import tempfile
-from imagekitio.models.UploadFileRequestOptions import UploadFileRequestOptions
 
 
 @asynccontextmanager
@@ -35,29 +34,41 @@ async def upload_file(
             temp_file_path = temp_file.name
             shutil.copyfileobj(file.file, temp_file)
 
-        upload_result = imagekit.upload_file(
-            file=open(temp_file_path, "rb"),
-            file_name=file.filename,
-            options=UploadFileRequestOptions(
-                use_unique_file_name=True,
+        with open(temp_file_path, "rb") as f:
+            upload_result = imagekit.files.upload(
+                file=f,
+                file_name=file.filename,
                 tags=["backend-upload"],
-            ),
-        )
+            )
 
-        if upload_result.status_code != 200:
+        if not upload_result or not upload_result.url:
             raise HTTPException(status_code=400, detail="Image upload failed")
+
+        content_type = file.content_type or ""
+        file_type = "video" if content_type.startswith("video/") else "image"
 
         post = Post(
             caption=caption,
             url=upload_result.url,
-            file_type="video" if file.content_type.startswith("video/") else "image",
+            file_type=file_type,
             file_name=upload_result.name,
         )
+
         session.add(post)
         await session.commit()
         await session.refresh(post)
 
-        return post
+        return {
+            "id": post.id,
+            "caption": post.caption,
+            "url": post.url,
+            "file_type": post.file_type,
+            "file_name": post.file_name,
+            "created_at": post.created_at.isoformat() if post.created_at else None,
+        }
+
+    except HTTPException:
+        raise
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -65,7 +76,6 @@ async def upload_file(
     finally:
         if temp_file_path and os.path.exists(temp_file_path):
             os.unlink(temp_file_path)
-        file.file.close()
 
 
 @app.get("/feed")
